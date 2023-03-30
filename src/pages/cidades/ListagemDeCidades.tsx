@@ -22,9 +22,7 @@ export const ListagemDeCidades: React.FC = () => {
           textoBotaoNovo='Nova'
           mostrarInputBusca
           textoDaBusca={busca}
-          aoMudarTextoDeBusca={(texto) =>
-            setSearchParams({ busca: texto }, { replace: true })
-          }
+          aoMudarTextoDeBusca={(texto) => setSearchParams({ busca: texto }, { replace: true })}
         />
       }
     >

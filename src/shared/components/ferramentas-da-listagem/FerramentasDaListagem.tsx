@@ -21,34 +21,19 @@ export const FerramentasDaListagem: React.FC<IFerramentasDaListagem> = ({
 }) => {
   const theme = useTheme();
   return (
-    <Box
-      gap={1}
-      marginX={1}
-      padding={1}
-      paddingX={2}
-      display="flex"
-      alignItems="center"
-      height={theme.spacing(5)}
-      component={Paper}
-    >
+    <Box gap={1} marginX={1} padding={1} paddingX={2} display='flex' alignItems='center' height={theme.spacing(5)} component={Paper}>
       {mostrarInputBusca && (
         <TextField
-          size="small"
+          size='small'
           placeholder={Environment.INPUT_DE_BUSCA}
           value={textoDaBusca}
           onChange={(e) => aoMudarTextoDeBusca?.(e.target.value)}
         />
       )}
 
-      <Box flex={1} display="flex" justifyContent="end">
+      <Box flex={1} display='flex' justifyContent='end'>
         {mostrarBotaoNovo && (
-          <Button
-            color="primary"
-            disableElevation
-            variant="contained"
-            onClick={aoClicaEmNovo}
-            endIcon={<Icon>add</Icon>}
-          >
+          <Button color='primary' disableElevation variant='contained' onClick={aoClicaEmNovo} endIcon={<Icon>add</Icon>}>
             {textoBotaoNovo}
           </Button>
         )}
