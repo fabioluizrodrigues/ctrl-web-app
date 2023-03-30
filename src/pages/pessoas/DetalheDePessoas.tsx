@@ -1,17 +1,26 @@
 import { LinearProgress } from '@mui/material';
+import { FormHandles } from '@unform/core';
 import { Form } from '@unform/web';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { FerramentasDeDetalhe } from '../../shared/components';
 import { VTextField } from '../../shared/forms';
 import { LayoutBaseDePagina } from '../../shared/layouts';
 import { PessoasService } from '../../shared/services/api/pessoas/PessoasService';
 
+interface IFormData {
+  nomeCompleto: string;
+  email: string;
+  cidadeId: number;
+}
+
 export const DetalheDePessoas: React.FC = () => {
   const { id = 'nova' } = useParams<'id'>();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [nome, setNome] = useState('');
+
+  const formRef = useRef<FormHandles>(null);
 
   useEffect(() => {
     if (id !== 'nova') {
@@ -23,14 +32,31 @@ export const DetalheDePessoas: React.FC = () => {
           navigate('/pessoas');
         } else {
           setNome(result.nomeCompleto);
-          console.log(result);
+          formRef.current?.setData(result);
         }
       });
     }
   }, [id]);
 
-  const handleSave = () => {
-    console.log('Save');
+  const handleSave = (dados: IFormData) => {
+    setIsLoading(true);
+    if (id === 'nova') {
+      PessoasService.create(dados).then((result) => {
+        setIsLoading(false);
+        if (result instanceof Error) {
+          alert(result.message);
+        } else {
+          navigate(`/pessoas/detalhe/${result}`);
+        }
+      });
+    } else {
+      PessoasService.updateById(Number(id), { id: Number(id), ...dados }).then((result) => {
+        setIsLoading(false);
+        if (result instanceof Error) {
+          alert(result.message);
+        }
+      });
+    }
   };
 
   const handleDelete = (id: number) => {
@@ -55,8 +81,8 @@ export const DetalheDePessoas: React.FC = () => {
           mostrarBotaoSalvarEVoltar
           mostrarBotaoNovo={id !== 'nova'}
           mostrarBotaoApagar={id !== 'nova'}
-          aoClicarEmSalvar={handleSave}
-          aoClicarEmSalvarEVoltar={handleSave}
+          aoClicarEmSalvar={() => formRef.current?.submitForm()}
+          aoClicarEmSalvarEVoltar={() => formRef.current?.submitForm()}
           aoClicarEmApagar={() => handleDelete(Number(id))}
           aoClicarEmNovo={() => navigate('/pessoas/detalhe/nova')}
           aoClicarEmVoltar={() => navigate('/pessoas')}
@@ -65,9 +91,10 @@ export const DetalheDePessoas: React.FC = () => {
     >
       {isLoading && <LinearProgress variant='indeterminate' />}
 
-      <Form onSubmit={(dados) => console.log(dados)}>
+      <Form ref={formRef} onSubmit={handleSave}>
         <VTextField name='nomeCompleto' />
-        <button type='submit'>Submit</button>
+        <VTextField name='email' />
+        <VTextField name='cidadeId' />
       </Form>
 
       <p>Detalhe de pessoas {id}</p>
