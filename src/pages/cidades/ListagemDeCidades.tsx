@@ -4,30 +4,31 @@ import { FerramentasDaListagem } from '../../shared/components';
 import { LayoutBaseDePagina } from '../../shared/layouts';
 
 export const ListagemDeCidades: React.FC = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
 
-	const [searchParams, setSearchParams] = useSearchParams();
+  const busca = useMemo(() => {
+    return searchParams.get('busca') || '';
+  }, [searchParams]);
 
-	const busca = useMemo(() => {
-		return searchParams.get('busca') || '';
-	}, [searchParams]);
-
-	/* 	useEffect(() => {
+  /* 	useEffect(() => {
         Cidade
 	}, []); */
 
-	return (
-		<LayoutBaseDePagina 
-			titulo='Listagem de cidades'
-			barraDeFerramentas={
-				<FerramentasDaListagem
-					textoBotaoNovo='Nova'
-					mostrarInputBusca
-					textoDaBusca={ busca }
-					aoMudarTextoDeBusca={texto => setSearchParams({busca: texto}, { replace: true})}
-				/>
-			}
-		>
-
-		</LayoutBaseDePagina>
-	);
+  return (
+    <LayoutBaseDePagina
+      titulo='Listagem de cidades'
+      barraDeFerramentas={
+        <FerramentasDaListagem
+          textoBotaoNovo='Nova'
+          mostrarInputBusca
+          textoDaBusca={busca}
+          aoMudarTextoDeBusca={(texto) =>
+            setSearchParams({ busca: texto }, { replace: true })
+          }
+        />
+      }
+    >
+      <p>Listagem </p>
+    </LayoutBaseDePagina>
+  );
 };
