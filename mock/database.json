@@ -72,5 +72,51 @@
       "email": "antonio@email.com",
       "cidadeId": "1"
     }
+  ],
+  "cidades": [
+    {
+      "id": 1,
+      "nome": "Cidade 1"
+    },
+    {
+      "id": 2,
+      "nome": "Cidade 2"
+    },
+    {
+      "id": 3,
+      "nome": "Cidade 3"
+    },
+    {
+      "id": 4,
+      "nome": "Cidade 4"
+    },
+    {
+      "id": 5,
+      "nome": "Cidade 5"
+    },
+    {
+      "id": 6,
+      "nome": "Cidade 6"
+    },
+    {
+      "nome": "Cidade 7",
+      "id": 7
+    },
+    {
+      "id": 8,
+      "nome": "Cidade 8"
+    },
+    {
+      "nome": "Cidade 9",
+      "id": 9
+    },
+    {
+      "nome": "Cidade 10",
+      "id": 10
+    },
+    {
+      "nome": "Cidade 11",
+      "id": 11
+    }
   ]
 }
