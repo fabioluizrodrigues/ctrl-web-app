@@ -6,6 +6,7 @@ import { IVFormErrors, useVForm, VForm, VTextField } from '../../shared/forms';
 import { LayoutBaseDePagina } from '../../shared/layouts';
 import { PessoasService } from '../../shared/services/api/pessoas/PessoasService';
 import * as yup from 'yup';
+import { AutoCompleteCidades } from './components/AutoCompleteCidades';
 
 interface IFormData {
   nomeCompleto: string;
@@ -142,14 +143,14 @@ export const DetalheDePessoas: React.FC = () => {
             </Grid>
 
             <Grid container item direction='row' spacing={2}>
-              <Grid item>
+              <Grid item xs={12} sm={8} md={6} lg={4} xl={1}>
                 <VTextField fullWidth name='email' label='E-mail' disabled={isLoading} />
               </Grid>
             </Grid>
 
             <Grid container item direction='row' spacing={2}>
-              <Grid item>
-                <VTextField fullWidth name='cidadeId' label='Cidade' disabled={isLoading} />
+              <Grid item xs={12} sm={8} md={6} lg={4} xl={1}>
+                <AutoCompleteCidades isExternalLoading={isLoading} />
               </Grid>
             </Grid>
           </Grid>
