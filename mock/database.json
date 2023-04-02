@@ -118,5 +118,8 @@
       "nome": "Cidade 11",
       "id": 11
     }
-  ]
+  ],
+  "auth": {
+    "accessToken": "aaaaaaaaaa.bbbbbbbbbb.cccccccccccc"
+  }
 }
