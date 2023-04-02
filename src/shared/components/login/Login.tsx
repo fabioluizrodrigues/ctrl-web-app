@@ -1,7 +1,7 @@
 import { Box, Button, Card, CardActions, CardContent, CircularProgress, TextField, Typography } from '@mui/material';
-import { useAuthContext } from '../../contexts';
 import { useState } from 'react';
 import * as yup from 'yup';
+import { useAuthContext } from '../../contexts';
 
 const loginSchema = yup.object().shape({
   email: yup.string().email().required(),
@@ -60,7 +60,7 @@ export const Login: React.FC<ILoginProps> = ({ children }) => {
               fullWidth
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              onKeyDown={(e) => setEmailError('')}
+              onKeyDown={() => setEmailError('')}
               error={!!emailError}
               helperText={emailError}
               disabled={isLoading}
@@ -71,7 +71,7 @@ export const Login: React.FC<ILoginProps> = ({ children }) => {
               fullWidth
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              onKeyDown={(e) => setPasswordError('')}
+              onKeyDown={() => setPasswordError('')}
               error={!!passwordError}
               helperText={passwordError}
               disabled={isLoading}
