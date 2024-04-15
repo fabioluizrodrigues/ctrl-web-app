@@ -2,17 +2,28 @@ import { Environment } from '../../../environment';
 import { Api } from '../axios-config';
 
 export interface IListagemPessoa {
-  id: number;
-  nomeCompleto: string;
+  id: string;
+  cnpj_cpf: string;
+  nome_razao: string;
+  telefone: string;
   email: string;
-  cidadeId: number;
 }
 
 export interface IDetalhePessoa {
-  id: number;
-  nomeCompleto: string;
+  id: string;
+  cnpj_cpf: string;
+  nome_razao: string;
   email: string;
-  cidadeId: number;
+  telefone: string;
+  ie_rg?: string;
+  cep?: string;
+  estado?: string;
+  cidade_id?: string;
+  bairro?: string;
+  logradouro?: string;
+  numero?: string;
+  complemento?: string;
+  observacoes?: string;
 }
 
 type TPessoasComTotalCount = {
@@ -22,7 +33,7 @@ type TPessoasComTotalCount = {
 
 const getAll = async (page = 1, filter = ''): Promise<TPessoasComTotalCount | Error> => {
   try {
-    const urlRelativa = `/pessoas?_page=${page}&_limit=${Environment.LIMITE_DE_LINHAS}&nomeCompleto_like=${filter}`;
+    const urlRelativa = `/pessoas?_page=${page}&_limit=${Environment.LIMITE_DE_LINHAS}&nome_razao_like=${filter}`;
 
     const { data, headers } = await Api.get(urlRelativa);
 
@@ -40,7 +51,7 @@ const getAll = async (page = 1, filter = ''): Promise<TPessoasComTotalCount | Er
   }
 };
 
-const getById = async (id: number): Promise<IDetalhePessoa | Error> => {
+const getById = async (id: string): Promise<IDetalhePessoa | Error> => {
   try {
     const { data } = await Api.get(`/pessoas/${id}`);
 
@@ -55,7 +66,7 @@ const getById = async (id: number): Promise<IDetalhePessoa | Error> => {
   }
 };
 
-const create = async (dados: Omit<IDetalhePessoa, 'id'>): Promise<number | Error> => {
+const create = async (dados: Omit<IDetalhePessoa, 'id'>): Promise<string | Error> => {
   try {
     const { data } = await Api.post<IDetalhePessoa>('/pessoas', dados);
 
@@ -70,7 +81,7 @@ const create = async (dados: Omit<IDetalhePessoa, 'id'>): Promise<number | Error
   }
 };
 
-const updateById = async (id: number, dados: IDetalhePessoa): Promise<void | Error> => {
+const updateById = async (id: string, dados: IDetalhePessoa): Promise<void | Error> => {
   try {
     await Api.put(`/pessoas/${id}`, dados);
   } catch (error) {
@@ -79,7 +90,7 @@ const updateById = async (id: number, dados: IDetalhePessoa): Promise<void | Err
   }
 };
 
-const deleteById = async (id: number): Promise<void | Error> => {
+const deleteById = async (id: string): Promise<void | Error> => {
   try {
     await Api.delete(`/pessoas/${id}`);
   } catch (error) {

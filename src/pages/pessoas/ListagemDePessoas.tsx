@@ -45,7 +45,7 @@ export const ListagemDePessoas: React.FC = () => {
         if (result instanceof Error) {
           alert(result.message);
         } else {
-          console.log(result);
+          //console.log(result);
           setRows(result.data);
           setTotalCount(result.totalCount);
         }
@@ -53,7 +53,7 @@ export const ListagemDePessoas: React.FC = () => {
     });
   }, [busca, pagina]);
 
-  const handleDelete = (id: number) => {
+  const handleDelete = (id: string) => {
     if (confirm('Confirma a exclusão do registro?')) {
       PessoasService.deleteById(id).then((result) => {
         if (result instanceof Error) {
@@ -84,7 +84,9 @@ export const ListagemDePessoas: React.FC = () => {
           <TableHead>
             <TableRow>
               <TableCell width={100}>Ações</TableCell>
-              <TableCell>Nome Completo</TableCell>
+              <TableCell>Nome</TableCell>
+              <TableCell>CNPJ/CPF</TableCell>
+              <TableCell>Telefone</TableCell>
               <TableCell>E-mail</TableCell>
             </TableRow>
           </TableHead>
@@ -99,7 +101,9 @@ export const ListagemDePessoas: React.FC = () => {
                     <Icon>edit</Icon>
                   </IconButton>
                 </TableCell>
-                <TableCell>{row.nomeCompleto}</TableCell>
+                <TableCell>{row.nome_razao}</TableCell>
+                <TableCell>{row.cnpj_cpf}</TableCell>
+                <TableCell>{row.telefone}</TableCell>
                 <TableCell>{row.email}</TableCell>
               </TableRow>
             ))}

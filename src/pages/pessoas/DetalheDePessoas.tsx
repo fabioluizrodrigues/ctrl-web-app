@@ -7,17 +7,44 @@ import { LayoutBaseDePagina } from '../../shared/layouts';
 import { PessoasService } from '../../shared/services/api/pessoas/PessoasService';
 import * as yup from 'yup';
 import { AutoCompleteCidades } from './components/AutoCompleteCidades';
+import { isValidCNPJ, isValidCPF, isValidMobilePhone } from '@brazilian-utils/brazilian-utils';
 
 interface IFormData {
-  nomeCompleto: string;
+  cnpj_cpf: string;
+  nome_razao: string;
   email: string;
-  cidadeId: number;
+  telefone: string;
+  ie_rg?: string;
+  cep?: string;
+  estado?: string;
+  cidade_id?: string;
+  bairro?: string;
+  logradouro?: string;
+  numero?: string;
+  complemento?: string;
+  observacoes?: string;
 }
 
 const formValidationSchema: yup.Schema<IFormData> = yup.object().shape({
-  nomeCompleto: yup.string().required().min(3),
+  cnpj_cpf: yup.string().required()
+    .test('is-valid-cnpj-cpf', 'CNPJ/CPF inválido!',
+      (value) => (isValidCNPJ(value as string) || isValidCPF(value as string))
+    ),
+  nome_razao: yup.string().required().min(3).max(255),
   email: yup.string().required().email(),
-  cidadeId: yup.number().required(),
+  telefone: yup.string().required()
+    .test('is-valid-telefone', 'Telefone inválido.',
+      (value) => isValidMobilePhone(value as string)
+    ),
+  ie_rg: yup.string().optional(),
+  cep: yup.string().optional(),
+  estado: yup.string().optional().min(2).max(2),
+  cidade_id: yup.string().optional(),
+  bairro: yup.string().optional(),
+  logradouro: yup.string().optional(),
+  numero: yup.string().optional(),
+  complemento: yup.string().optional(),
+  observacoes: yup.string().optional(),
 });
 
 export const DetalheDePessoas: React.FC = () => {
@@ -31,21 +58,31 @@ export const DetalheDePessoas: React.FC = () => {
   useEffect(() => {
     if (id !== 'nova') {
       setIsLoading(true);
-      PessoasService.getById(Number(id)).then((result) => {
+      PessoasService.getById(id).then((result) => {
         setIsLoading(false);
         if (result instanceof Error) {
           alert(result.message);
           navigate('/pessoas');
         } else {
-          setNome(result.nomeCompleto);
+          setNome(result.nome_razao);
           formRef.current?.setData(result);
         }
       });
     } else {
       formRef.current?.setData({
-        nomeCompleto: '',
+        cnpj_cpf: '',
+        nome_razao: '',
         email: '',
-        cidadeId: '',
+        telefone: '',
+        ie_rg: '',
+        cep: '',
+        estado: '',
+        cidade_id: '',
+        bairro: '',
+        logradouro: '',
+        numero: '',
+        complemento: '',
+        observacoes: '',
       });
     }
   }, [id]);
@@ -70,7 +107,7 @@ export const DetalheDePessoas: React.FC = () => {
             }
           });
         } else {
-          PessoasService.updateById(Number(id), { id: Number(id), ...dadosValidados }).then((result) => {
+          PessoasService.updateById(id, { id: id, ...dadosValidados }).then((result) => {
             setIsLoading(false);
             if (result instanceof Error) {
               alert(result.message);
@@ -93,7 +130,7 @@ export const DetalheDePessoas: React.FC = () => {
       });
   };
 
-  const handleDelete = (id: number) => {
+  const handleDelete = (id: string) => {
     if (confirm('Confirma a exclusão do registro?')) {
       PessoasService.deleteById(id).then((result) => {
         if (result instanceof Error) {
@@ -117,7 +154,7 @@ export const DetalheDePessoas: React.FC = () => {
           mostrarBotaoApagar={id !== 'nova'}
           aoClicarEmSalvar={save}
           aoClicarEmSalvarEVoltar={saveAndClose}
-          aoClicarEmApagar={() => handleDelete(Number(id))}
+          aoClicarEmApagar={() => handleDelete(id)}
           aoClicarEmNovo={() => navigate('/pessoas/detalhe/nova')}
           aoClicarEmVoltar={() => navigate('/pessoas')}
         />

@@ -4,7 +4,8 @@ import { AuthService } from '../services/api/auth/AuthService';
 interface IAuthContextData {
   logout: () => void;
   isAuthenticated: boolean;
-  login: (email: string, password: string) => Promise<string | void>;
+  login: (username: string, password: string) => Promise<string | void>;
+  errorMessage: string | undefined;
 }
 
 const AuthContext = createContext({} as IAuthContextData);
@@ -17,6 +18,7 @@ interface IAuthProviderProps {
 
 export const AuthProvider: React.FC<IAuthProviderProps> = ({ children }) => {
   const [accessToken, setAccessToken] = useState<string>();
+  const [errorMessage, setErrorMessage] = useState<string>();
 
   useEffect(() => {
     const accessToken = localStorage.getItem(LOCAL_STORAGE_KEY__ACCESS_TOKEN);
@@ -27,10 +29,10 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({ children }) => {
     }
   }, []);
 
-  const handleLogin = useCallback(async (email: string, password: string) => {
-    const result = await AuthService.auth(email, password);
+  const handleLogin = useCallback(async (username: string, password: string) => {
+    const result = await AuthService.auth(username, password);
     if (result instanceof Error) {
-      return result.message;
+      setErrorMessage(result.message);
     } else {
       localStorage.setItem(LOCAL_STORAGE_KEY__ACCESS_TOKEN, JSON.stringify(result.accessToken));
       setAccessToken(result.accessToken);
@@ -44,7 +46,7 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({ children }) => {
 
   const isAuthenticated = useMemo(() => !!accessToken, [accessToken]);
 
-  return <AuthContext.Provider value={{ isAuthenticated, login: handleLogin, logout: handleLogout }}>{children}</AuthContext.Provider>;
+  return <AuthContext.Provider value={{ isAuthenticated, login: handleLogin, logout: handleLogout, errorMessage }}>{children}</AuthContext.Provider>;
 };
 
 export const useAuthContext = () => useContext(AuthContext);
